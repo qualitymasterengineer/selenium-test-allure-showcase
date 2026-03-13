@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Allure Report</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="plugin/screen-diff/styles.css">
+<style id="custom-selenium-executor-style">
+.custom-selenium-logo::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzQzQjAyQSI+CiAgPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bS0xIDE1di00SDhsNC02IDEuNSAyLjVMMTQgMTFsLTMgNnptNCAwaC0ydi02bDItMyAxLjUgMi41TDE3IDEzbC0yIDR6Ii8+Cjwvc3ZnPg==');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.custom-selenium-logo .executor-icon,
+.custom-selenium-logo [class*="executor-icon"] {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+    <div id="alert"></div>
+    <div id="content">
+        <span class="spinner">
+            <span class="spinner__circle"></span>
+        </span>
+    </div>
+    <div id="popup"></div>
+    <script src="app.js"></script>
+    <script src="plugin/behaviors/index.js"></script>
+    <script src="plugin/packages/index.js"></script>
+    <script src="plugin/screen-diff/index.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVWC4GKEYS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-FVWC4GKEYS', {
+          'allureVersion': '2.37.0',
+          'reportUuid': '93297a25-c6f3-4372-949d-909512fb4d96',
+          'single_file': false
+        });
+    </script>
+<script id="custom-selenium-executor-patch">
+(function() {
+  var targetText = "Selenium Framework";
+  var className = "custom-selenium-logo";
+  function findIconCellForSeleniumRow() {
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    while ((node = walker.nextNode())) {
+      var text = (node.textContent || "").trim();
+      if (text.indexOf(targetText) === -1) continue;
+      var el = node.parentElement;
+      while (el && el !== document.body) {
+        var icon = el.querySelector("[class*=\"executor-icon\"], [class*=\"icon\"]");
+        if (icon) {
+          var iconParent = icon.parentElement;
+          if (iconParent && !iconParent.classList.contains(className)) {
+            icon.style.setProperty("display", "none", "important");
+            iconParent.classList.add(className);
+            return true;
+          }
+          return false;
+        }
+        var prev = el.previousElementSibling;
+        if (prev) {
+          var iconInPrev = prev.querySelector("[class*=\"icon\"]");
+          if (iconInPrev && !prev.classList.contains(className)) {
+            iconInPrev.style.setProperty("display", "none", "important");
+            prev.classList.add(className);
+            return true;
+          }
+        }
+        el = el.parentElement;
+      }
+    }
+    return false;
+  }
+  function run() {
+    findIconCellForSeleniumRow();
+    var attempts = 0;
+    var id = setInterval(function() {
+      attempts++;
+      if (findIconCellForSeleniumRow() || attempts >= 30) clearInterval(id);
+    }, 200);
+  }
+  var debounceTimer;
+  function reapplyOnDomChange() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(findIconCellForSeleniumRow, 150);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function() {
+      run();
+      if (typeof MutationObserver !== "undefined") {
+        var obs = new MutationObserver(reapplyOnDomChange);
+        obs.observe(document.body, { childList: true, subtree: true });
+      }
+    });
+  } else {
+    setTimeout(function() {
+      run();
+      if (typeof MutationObserver !== "undefined") {
+        var obs = new MutationObserver(reapplyOnDomChange);
+        obs.observe(document.body, { childList: true, subtree: true });
+      }
+    }, 100);
+  }
+})();
+</script>
+</body>
+</html>
