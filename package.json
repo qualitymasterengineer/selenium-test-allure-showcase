@@ -1,0 +1,24 @@
+{
+  "name": "selenium-test-allure-showcase",
+  "version": "1.0.0",
+  "description": "Allure report showcase — visualiza resultados de ejecuciones del proyecto selenium-test",
+  "scripts": {
+    "report:generate": "allure generate ./allure-results -o ./allure-report --clean",
+    "report:open": "allure open ./allure-report",
+    "report:patch": "node scripts/patch-allure-executor-icon.js",
+    "report:clean-history": "node scripts/clean-allure-history.js"
+  },
+  "keywords": [
+    "allure",
+    "reporting",
+    "qa",
+    "showcase"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "allure-commandline": "^2.31.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

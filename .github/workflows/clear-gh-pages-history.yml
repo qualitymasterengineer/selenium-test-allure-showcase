@@ -1,0 +1,35 @@
+# Clears the gh-pages branch so the next report deployment starts with no history.
+# Use this when you want to start reports from zero. Normal deployments (static-report)
+# preserve execution history; this workflow is for a one-time or occasional reset only.
+name: Clear Allure Report History (gh-pages)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clear-gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reset gh-pages branch content
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git checkout gh-pages
+            find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . 2>/dev/null || true
+          fi
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Allure Report</title></head><body><p>Report history cleared. The next deployment will show a fresh report.</p></body></html>' > index.html
+          git add -A
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git commit -m "chore: clear Allure report history (reset gh-pages)" || exit 0
+          git push -f origin gh-pages

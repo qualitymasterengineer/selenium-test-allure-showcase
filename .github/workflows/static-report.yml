@@ -1,0 +1,74 @@
+# Genera el reporte Allure desde allure-results y lo publica en gh-pages.
+# Histórico: cada vez que llegan nuevos resultados (push desde selenium-test a main),
+# se copia history/ del reporte anterior (gh-pages) a allure-results antes de generar;
+# así se mantiene el histórico y las gráficas Trend/Graphs se rellenan en cada ejecución.
+name: Generate and Deploy Allure Report
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (allure-results from main)
+        uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - name: Checkout previous report (gh-pages) for history
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: previous-report
+        continue-on-error: true
+
+      - name: Copy Allure history for Trend and Graphs
+        run: |
+          if [ -d previous-report/history ]; then
+            mkdir -p repo/allure-results
+            cp -r previous-report/history repo/allure-results/
+            echo "History copied; Trend/Graphs will show previous runs."
+          else
+            echo "No previous history (first run). Trends will appear from next run."
+          fi
+
+      - name: Validate allure-results (ensure history can be maintained)
+        run: |
+          if [ ! -d repo/allure-results ]; then
+            echo "::error::repo/allure-results not found. Push allure-results from selenium-test to main first."
+            exit 1
+          fi
+          COUNT=$(find repo/allure-results -maxdepth 1 -type f \( -name '*-result.json' -o -name '*-container.json' \) 2>/dev/null | wc -l)
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::warning::No result files in allure-results; report may be empty. History will be preserved for next run."
+          fi
+          echo "allure-results OK; proceeding to generate report."
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: cd repo && npm install
+
+      - name: Generate Allure Report
+        run: cd repo && npm run report:generate
+
+      - name: Apply executor icon patch (Selenium logo)
+        run: cd repo && node scripts/patch-allure-executor-icon.js
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: repo/allure-report
+          publish_branch: gh-pages
