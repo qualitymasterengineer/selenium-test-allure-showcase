@@ -5,7 +5,7 @@
   ### **Selenium Automation Framework & Allure Showcase**
 
   [![Selenium Tests](https://img.shields.io/badge/Framework-Selenium-D4AF37?style=for-the-badge&logo=selenium&logoColor=white)](https://www.selenium.dev/)
-  [![Language-TypeScript](https://img.shields.io/badge/Language-TypeScript-D4AF37?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Language-Java](https://img.shields.io/badge/Language-Java-D4AF37?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
   [![Allure-Report](https://img.shields.io/badge/Report-Allure-D4AF37?style=for-the-badge&logo=allure&logoColor=white)](https://allurereport.org/)
   [![CI/CD-GitHub_Actions](https://img.shields.io/badge/CI/CD-GitHub_Actions-D4AF37?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 
