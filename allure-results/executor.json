@@ -1,17 +1,1 @@
-[
-  {
-    "reportName": "Allure Report",
-    "name": "GitHub Actions",
-    "type": "github",
-    "buildName": "SauceDemo Selenium E2E",
-    "buildOrder": 16,
-    "reportUrl": "https://github.com/qualitymasterengineer/selenium-test",
-    "buildUrl": "https://github.com/qualitymasterengineer/selenium-test/actions/runs/22986838165"
-  },
-  {
-    "name": "Selenium Framework",
-    "type": "selenium-custom",
-    "buildName": "v4.x",
-    "reportUrl": "https://www.selenium.dev"
-  }
-]
+{"buildName":"SauceDemo Selenium E2E","name":"Maven","type":"maven"}
