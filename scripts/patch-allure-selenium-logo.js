@@ -40,23 +40,34 @@ const seleniumBuildName = seleniumVersion ? `Selenium ${seleniumVersion}` : 'Sel
 
 fs.copyFileSync(logoSource, logoDest);
 
-// 1. Añadir ejecutores en widgets/executors.json (sin tocar los existentes)
+// 1. Asegurar las tres referencias en widgets/executors.json (siempre, sin condiciones)
 if (fs.existsSync(executorsPath)) {
   let executors = JSON.parse(fs.readFileSync(executorsPath, 'utf8'));
   if (!Array.isArray(executors)) executors = [executors];
   let changed = false;
 
-  // En GitHub Actions: añadir Maven (SauceDemo Selenium E2E) como tercera referencia si no está
-  const isGh = process.env.GITHUB_ACTIONS === 'true';
+  const buildUrl = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
+    ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+    : 'https://github.com/qualitymasterengineer/selenium-test/actions';
+  const hasGitHub = executors.some(e => (e.type === 'github') || (e.name && e.name === 'GitHub Actions'));
+  if (!hasGitHub) {
+    executors.unshift({
+      name: 'GitHub Actions',
+      type: 'github',
+      buildName: 'SauceDemo Selenium E2E',
+      reportUrl: 'https://github.com/qualitymasterengineer/selenium-test',
+      buildUrl
+    });
+    changed = true;
+  }
+
   const hasMaven = executors.some(e => (e.type === 'maven') || (e.name && e.name === 'Maven'));
-  if (isGh && !hasMaven) {
+  if (!hasMaven) {
     executors.push({
       name: 'Maven',
       type: 'maven',
       buildName: 'SauceDemo Selenium E2E',
-      reportUrl: process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY
-        ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions`
-        : 'https://github.com/qualitymasterengineer/selenium-test/actions'
+      reportUrl: 'https://github.com/qualitymasterengineer/selenium-test/actions'
     });
     changed = true;
   }
