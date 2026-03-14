@@ -40,10 +40,27 @@ const seleniumBuildName = seleniumVersion ? `Selenium ${seleniumVersion}` : 'Sel
 
 fs.copyFileSync(logoSource, logoDest);
 
-// 1. Añadir segundo ejecutor (Selenium Framework) en widgets/executors.json
+// 1. Añadir ejecutores en widgets/executors.json (sin tocar los existentes)
 if (fs.existsSync(executorsPath)) {
   let executors = JSON.parse(fs.readFileSync(executorsPath, 'utf8'));
   if (!Array.isArray(executors)) executors = [executors];
+  let changed = false;
+
+  // En GitHub Actions: añadir Maven (SauceDemo Selenium E2E) como tercera referencia si no está
+  const isGh = process.env.GITHUB_ACTIONS === 'true';
+  const hasMaven = executors.some(e => (e.type === 'maven') || (e.name && e.name === 'Maven'));
+  if (isGh && !hasMaven) {
+    executors.push({
+      name: 'Maven',
+      type: 'maven',
+      buildName: 'SauceDemo Selenium E2E',
+      reportUrl: process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY
+        ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions`
+        : 'https://github.com/qualitymasterengineer/selenium-test/actions'
+    });
+    changed = true;
+  }
+
   const hasSelenium = executors.some(e => (e.type === 'selenium-custom') || (e.name && e.name.includes('Selenium Framework')));
   if (!hasSelenium) {
     executors.push({
@@ -52,6 +69,10 @@ if (fs.existsSync(executorsPath)) {
       buildName: seleniumBuildName,
       reportUrl: 'https://www.selenium.dev'
     });
+    changed = true;
+  }
+
+  if (changed) {
     fs.writeFileSync(executorsPath, JSON.stringify(executors), 'utf8');
   }
 }
