@@ -2,15 +2,11 @@
   {
     "name": "Known failures",
     "matchedStatuses": ["broken"],
-    "messageRegex": ".*Known failure.*"
+    "messageRegex": ".*(Known failure|FALLO CONOCIDO).*"
   },
   {
     "name": "Product defects",
     "matchedStatuses": ["failed"]
-  },
-  {
-    "name": "Test defects",
-    "matchedStatuses": ["broken"]
   },
   {
     "name": "Passed",

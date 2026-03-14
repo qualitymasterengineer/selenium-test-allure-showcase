@@ -1,26 +1,22 @@
 /**
- * Parche para la sección Executors en el reporte Allure (proyecto showcase).
- * Versión adaptada para ejecutarse tras "allure generate": usa REPORT_DIR y no depende de pom.xml.
- *
- * Uso: REPORT_DIR=allure-report node patch-allure-selenium-logo.js
- * O:   node patch-allure-selenium-logo.js [ruta/al/reporte]
+ * Parche para la sección Executors: convivencia de executor nativo (Maven/Jenkins) y Selenium.
+ * 1. Añade un segundo ejecutor "Selenium Framework" (type selenium-custom) en widgets/executors.json.
+ * 2. Inyecta CSS (.custom-selenium-logo::before) y JS que añade la clase al ítem de Selenium sin borrar el original.
+ * Si el parche falla, el executor nativo sigue viéndose; solo se pierde el icono en la línea de Selenium.
+ * En showcase: reporte en allure-report/; en proyecto Maven sería target/site/allure-maven-plugin.
  */
 const fs = require('fs');
 const path = require('path');
 
-const projectRoot = process.cwd();
-const reportDir = path.resolve(
-  projectRoot,
-  process.env.REPORT_DIR || process.argv[2] || 'allure-report'
-);
+const projectRoot = path.resolve(__dirname, '..');
+const reportDir = path.join(projectRoot, 'allure-report');
 const indexPath = path.join(reportDir, 'index.html');
 const executorsPath = path.join(reportDir, 'widgets', 'executors.json');
-const scriptDir = __dirname;
-const logoSource = path.join(scriptDir, 'assets', 'selenium-logo.svg');
+const logoSource = path.join(projectRoot, 'assets', 'selenium-logo.svg');
 const logoDest = path.join(reportDir, 'selenium-logo.svg');
 
 if (!fs.existsSync(reportDir)) {
-  console.log('patch-allure-selenium-logo: no report dir at', reportDir, ', skipping');
+  console.log('patch-allure-selenium-logo: no report dir (run allure generate first), skipping');
   process.exit(0);
 }
 if (!fs.existsSync(indexPath)) {
@@ -28,15 +24,24 @@ if (!fs.existsSync(indexPath)) {
   process.exit(0);
 }
 if (!fs.existsSync(logoSource)) {
-  console.log('patch-allure-selenium-logo: selenium-logo.svg not found at', logoSource, ', skipping');
+  console.log('patch-allure-selenium-logo: selenium-logo.svg not found, skipping');
   process.exit(0);
 }
 
-const seleniumVersion = process.env.SELENIUM_VERSION || '4.x';
-const seleniumBuildName = `Selenium ${seleniumVersion}`;
+function getSeleniumVersion() {
+  const pomPath = path.join(projectRoot, 'pom.xml');
+  if (!fs.existsSync(pomPath)) return null;
+  const pom = fs.readFileSync(pomPath, 'utf8');
+  const m = pom.match(/<selenium\.version>([^<]+)<\/selenium\.version>/);
+  return m ? m[1].trim() : null;
+}
+
+const seleniumVersion = getSeleniumVersion();
+const seleniumBuildName = seleniumVersion ? `Selenium ${seleniumVersion}` : 'Selenium 4.x';
 
 fs.copyFileSync(logoSource, logoDest);
 
+// 1. Añadir segundo ejecutor (Selenium Framework) en widgets/executors.json
 if (fs.existsSync(executorsPath)) {
   let executors = JSON.parse(fs.readFileSync(executorsPath, 'utf8'));
   if (!Array.isArray(executors)) executors = [executors];

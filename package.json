@@ -2,11 +2,18 @@
   "name": "selenium-test-allure-showcase",
   "version": "1.0.0",
   "description": "Allure report showcase — visualiza resultados de ejecuciones del proyecto selenium-test",
+  "private": true,
   "scripts": {
+    "report:allure:prepare": "node scripts/copy-allure-history.js && node scripts/write-allure-env.js && node scripts/write-allure-executor.js && node scripts/write-allure-categories.js && node scripts/patch-allure-known-failures.js && node scripts/patch-allure-broken-to-failed.js && node scripts/patch-allure-passed-message.js",
+    "report:allure:generate": "npm run report:allure:prepare && allure generate ./allure-results -o ./allure-report --clean && node scripts/patch-allure-selenium-logo.js",
+    "report:allure:open": "node scripts/patch-allure-selenium-logo.js && allure open ./allure-report",
+    "report:allure": "npm run report:allure:generate && npm run report:allure:open",
+    "report:prepare": "node scripts/prepare-allure-results.js",
     "report:generate": "allure generate ./allure-results -o ./allure-report --clean",
     "report:open": "allure open ./allure-report",
     "report:patch": "node scripts/patch-allure-executor-icon.js",
-    "report:clean-history": "node scripts/clean-allure-history.js"
+    "report:clean-history": "node scripts/clean-allure-history.js",
+    "allure:clean": "node scripts/clean-allure-history.js"
   },
   "keywords": [
     "allure",

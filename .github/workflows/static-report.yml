@@ -52,34 +52,24 @@ jobs:
           fi
           echo "allure-results OK; proceeding to generate report."
 
-      - name: Ensure Allure config (categories.json, executor.json) in allure-results
+      - name: Ensure Allure config (categories, executor, environment) in allure-results
         run: |
           RESULTS=repo/allure-results
           CONFIG=repo/.github/allure-config
           mkdir -p "$RESULTS"
           if [ -f "$CONFIG/categories.json" ]; then
-            if [ ! -f "$RESULTS/categories.json" ]; then
-              cp "$CONFIG/categories.json" "$RESULTS/categories.json"
-              echo "Copied categories.json into allure-results (Categories tab will work)."
-            else
-              echo "categories.json already present in allure-results (from selenium-test), keeping it."
-            fi
+            cp "$CONFIG/categories.json" "$RESULTS/categories.json"
+            echo "Applied categories.json for parity with local report."
           fi
           if [ -f "$CONFIG/executor.json" ]; then
             if [ ! -f "$RESULTS/executor.json" ]; then
               cp "$CONFIG/executor.json" "$RESULTS/executor.json"
-              echo "Copied executor.json into allure-results (Executors widget will work)."
-            else
-              echo "executor.json already present in allure-results (from selenium-test), keeping it."
+              echo "Copied executor.json into allure-results."
             fi
           fi
           if [ -f "$CONFIG/environment.properties" ]; then
-            if [ ! -f "$RESULTS/environment.properties" ]; then
-              cp "$CONFIG/environment.properties" "$RESULTS/environment.properties"
-              echo "Copied environment.properties into allure-results (Environment section will work)."
-            else
-              echo "environment.properties already present in allure-results (from selenium-test), keeping it."
-            fi
+            cp "$CONFIG/environment.properties" "$RESULTS/environment.properties"
+            echo "Applied environment.properties for parity with local report."
           fi
 
       - name: Setup Node
@@ -90,15 +80,14 @@ jobs:
       - name: Install Dependencies
         run: cd repo && npm install
 
+      - name: Patch result files (known failures, broken→failed, passed message)
+        run: cd repo && node scripts/patch-allure-known-failures.js && node scripts/patch-allure-broken-to-failed.js && node scripts/patch-allure-passed-message.js
+
       - name: Generate Allure Report
         run: cd repo && npm run report:generate
-        # allure-results already contains: history/ (for Trend), categories.json, executor.json, environment.properties
 
-      - name: Patch Allure report (Selenium logo in Executors)
-        run: cd repo && node scripts/patch-allure-executor-icon.js
-        env:
-          REPORT_DIR: allure-report
-          # SELENIUM_VERSION: "4.25.0"   # opcional
+      - name: Apply executor icon patch (Selenium logo)
+        run: cd repo && node scripts/patch-allure-selenium-logo.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
