@@ -3,7 +3,6 @@
  * 1. Añade un segundo ejecutor "Selenium Framework" (type selenium-custom) en widgets/executors.json.
  * 2. Inyecta CSS (.custom-selenium-logo::before) y JS que añade la clase al ítem de Selenium sin borrar el original.
  * Si el parche falla, el executor nativo sigue viéndose; solo se pierde el icono en la línea de Selenium.
- * En showcase: reporte en allure-report/; en proyecto Maven sería target/site/allure-maven-plugin.
  */
 const fs = require('fs');
 const path = require('path');

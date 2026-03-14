@@ -1,7 +1,6 @@
 /**
  * Escribe allure-results/categories.json (sección Categories).
- * Incluye regex para Known failure y FALLO CONOCIDO.
- * Rutas showcase: allure-results/ en la raíz.
+ * Tras patch-allure-broken-to-failed.js, solo los known failures quedan "broken"; el resto son "failed".
  */
 const fs = require('fs');
 const path = require('path');

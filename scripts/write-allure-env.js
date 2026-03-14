@@ -1,6 +1,6 @@
 /**
  * Escribe allure-results/environment.properties (sección Environment del reporte).
- * Rutas showcase: allure-results/ en la raíz.
+ * Incluye Java/OS y Base.URL (desde env o config por defecto).
  */
 const fs = require('fs');
 const path = require('path');
@@ -17,8 +17,8 @@ try {
   if (m) javaVersion = m[1];
 } catch (_) {}
 
-const os = process.platform;   // win32, linux, darwin
-const arch = process.arch;     // x64, arm64
+const os = process.platform; // win32, linux, darwin
+const arch = process.arch;   // x64, arm64
 const baseUrl = process.env.BASE_URL || 'https://www.saucedemo.com';
 
 const lines = [

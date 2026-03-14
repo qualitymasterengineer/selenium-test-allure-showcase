@@ -1,6 +1,6 @@
 /**
  * Escribe allure-results/executor.json (sección Executors del reporte).
- * Rutas showcase: allure-results/ en la raíz.
+ * GitHub Actions: name, buildUrl, etc. Local: nombre y timestamp.
  */
 const fs = require('fs');
 const path = require('path');

@@ -1,7 +1,8 @@
 /**
- * Convierte status "broken" a "failed" cuando el mensaje NO contiene "Known failure".
- * Ejecutar después de patch-allure-known-failures.js.
- * Rutas showcase: allure-results/ en la raíz.
+ * Convierte status "broken" a "failed" en *-result.json cuando el mensaje NO contiene "Known failure".
+ * Así, en Allure solo los fallos conocidos quedan como broken (categoría Known failures);
+ * el resto de fallos se muestran siempre como Failed (Product defects).
+ * Debe ejecutarse después de patch-allure-known-failures.js.
  */
 const fs = require('fs');
 const path = require('path');

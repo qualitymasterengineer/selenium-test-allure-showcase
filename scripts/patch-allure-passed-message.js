@@ -1,6 +1,5 @@
 /**
- * Asigna mensaje por defecto a tests passed con mensaje vacío.
- * Rutas showcase: allure-results/ en la raíz.
+ * Asigna mensaje por defecto a tests passed con mensaje vacío para evitar "<Empty>" en Categories.
  */
 const fs = require('fs');
 const path = require('path');

@@ -1,6 +1,7 @@
 /**
  * Copia allure-report/history → allure-results/history para Trend y Graphs.
- * Rutas adaptadas al showcase: allure-results/ y allure-report/ en la raíz.
+ * Origen: target/site/allure-maven-plugin/history (Maven) o allure-report/history (showcase).
+ * Destino: target/allure-results/history (Maven) o allure-results/history (showcase).
  */
 const fs = require('fs');
 const path = require('path');

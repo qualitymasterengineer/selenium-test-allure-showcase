@@ -1,7 +1,6 @@
 /**
- * Parchea *-result.json de tests de fallo conocido: status → broken, message "Known failure: ...".
- * Ajustar knownFailurePatterns al nombre de tus tests.
- * Rutas showcase: allure-results/ en la raíz.
+ * Parchea *-result.json de tests de fallo conocido: status → broken, message con prefijo "Known failure: ".
+ * Criterio: nombre del test coincide con problem_user/detalle o performance_glitch/2 segundo (o similar).
  */
 const fs = require('fs');
 const path = require('path');
@@ -17,7 +16,6 @@ const knownFailurePatterns = [
   /problem_user.*detalle|detalle.*problem_user/i,
   /performance_glitch.*2 segundo|2 segundo.*performance_glitch/i,
   /ProductDescriptionProblemUser|LoginPerformanceGlitchUser/i,
-  /FALLO CONOCIDO/i,
 ];
 
 const files = fs.readdirSync(resultsDir).filter((f) => f.endsWith('-result.json'));
