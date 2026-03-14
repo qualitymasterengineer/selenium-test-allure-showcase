@@ -1,1 +1,1 @@
-[{"values":["17"],"name":"Java.Version"},{"values":["Linux"],"name":"OS"},{"values":["https://www.saucedemo.com"],"name":"Base.URL"},{"values":["Chrome"],"name":"Browser"},{"values":["Allure Showcase"],"name":"Report"}]
+[{"values":["17"],"name":"Java.Version"},{"values":["Linux"],"name":"OS"},{"values":["amd64"],"name":"OS.Arch"},{"values":["https://www.saucedemo.com"],"name":"Base.URL"},{"values":["Chrome"],"name":"Browser"},{"values":["119.0"],"name":"Browser.Version"}]
