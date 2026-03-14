@@ -1,1 +1,1 @@
-{"total":3,"items":[{"uid":"bdbf199525818fae7a8651db9eafe741","name":"Test defects","statistic":{"failed":0,"broken":8,"skipped":0,"passed":0,"unknown":0,"total":8}},{"uid":"9c0a17f988a69955048b6c2929950c76","name":"Known failures","statistic":{"failed":0,"broken":2,"skipped":0,"passed":0,"unknown":0,"total":2}},{"uid":"7e1dff7028ad53fad7abb983ae6cc28d","name":"Passed","statistic":{"failed":0,"broken":0,"skipped":0,"passed":6,"unknown":0,"total":6}}]}
+{"total":0,"items":[]}
