@@ -45,6 +45,8 @@ npm run report:open
 
 Para que el reporte se vea igual que en **selenium-test** (logo de Selenium en Executors), tras generar en local ejecuta `npm run report:patch` antes de abrir. En CI el workflow ya aplica este parche antes de desplegar a GitHub Pages.
 
+**Opciones del script de parche** (`scripts/patch-allure-executor-icon.js`): el logo se lee desde `assets/selenium-logo.svg` en la raíz. Si el reporte está en otra ruta: `REPORT_DIR=docs node scripts/patch-allure-executor-icon.js` o `node scripts/patch-allure-executor-icon.js docs`. Versión de Selenium en Executors (opcional): `SELENIUM_VERSION=4.25.0 node scripts/patch-allure-executor-icon.js`.
+
 ### Dos filas en Executors (GitHub Actions + Selenium Framework)
 
 En **selenium-test** se envía en CI un `executor.json` con **dos entradas** (array). El generador de **Allure 2** a veces solo escribe un executor o deja el widget vacío cuando recibe un array. En **este proyecto** el parche hace dos cosas:

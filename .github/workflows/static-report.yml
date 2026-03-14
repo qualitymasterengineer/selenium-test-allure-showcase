@@ -63,8 +63,11 @@ jobs:
       - name: Generate Allure Report
         run: cd repo && npm run report:generate
 
-      - name: Apply executor icon patch (Selenium logo)
+      - name: Patch Allure report (Selenium logo in Executors)
         run: cd repo && node scripts/patch-allure-executor-icon.js
+        env:
+          REPORT_DIR: allure-report
+          # SELENIUM_VERSION: "4.25.0"   # opcional
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

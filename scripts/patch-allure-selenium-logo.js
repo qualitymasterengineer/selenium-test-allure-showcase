@@ -1,14 +1,9 @@
 /**
  * Parche para la sección Executors en el reporte Allure (proyecto showcase).
- * Muestra el logo de Selenium en Executors e inyecta CSS/JS en index.html.
+ * Versión adaptada para ejecutarse tras "allure generate": usa REPORT_DIR y no depende de pom.xml.
  *
- * Uso:
- *   node scripts/patch-allure-executor-icon.js
- *   REPORT_DIR=docs node scripts/patch-allure-executor-icon.js
- *   node scripts/patch-allure-executor-icon.js docs
- *   SELENIUM_VERSION=4.25.0 node scripts/patch-allure-executor-icon.js
- *
- * Logo: assets/selenium-logo.svg (en la raíz del proyecto showcase).
+ * Uso: REPORT_DIR=allure-report node patch-allure-selenium-logo.js
+ * O:   node patch-allure-selenium-logo.js [ruta/al/reporte]
  */
 const fs = require('fs');
 const path = require('path');
@@ -20,19 +15,20 @@ const reportDir = path.resolve(
 );
 const indexPath = path.join(reportDir, 'index.html');
 const executorsPath = path.join(reportDir, 'widgets', 'executors.json');
-const logoSource = path.join(projectRoot, 'assets', 'selenium-logo.svg');
+const scriptDir = __dirname;
+const logoSource = path.join(scriptDir, 'assets', 'selenium-logo.svg');
 const logoDest = path.join(reportDir, 'selenium-logo.svg');
 
 if (!fs.existsSync(reportDir)) {
-  console.log('patch-allure-executor-icon: no report dir at', reportDir, ', skipping');
+  console.log('patch-allure-selenium-logo: no report dir at', reportDir, ', skipping');
   process.exit(0);
 }
 if (!fs.existsSync(indexPath)) {
-  console.log('patch-allure-executor-icon: index.html not found, skipping');
+  console.log('patch-allure-selenium-logo: index.html not found, skipping');
   process.exit(0);
 }
 if (!fs.existsSync(logoSource)) {
-  console.log('patch-allure-executor-icon: selenium-logo.svg not found at', logoSource, ', skipping');
+  console.log('patch-allure-selenium-logo: selenium-logo.svg not found at', logoSource, ', skipping');
   process.exit(0);
 }
 
@@ -121,11 +117,11 @@ const injectScript = `
 
 let html = fs.readFileSync(indexPath, 'utf8');
 if (html.indexOf('custom-selenium-logo') >= 0) {
-  console.log('patch-allure-executor-icon: already patched');
+  console.log('patch-allure-selenium-logo: already patched');
 } else {
   html = html.replace('</head>', customStyle + '\n</head>');
   html = html.replace('</body>', injectScript + '\n</body>');
   fs.writeFileSync(indexPath, html, 'utf8');
-  console.log('patch-allure-executor-icon: executors + logo patched');
+  console.log('patch-allure-selenium-logo: executors + logo patched');
 }
 process.exit(0);
