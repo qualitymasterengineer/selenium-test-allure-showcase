@@ -1,0 +1,15 @@
+[
+  {
+    "name": "GitHub Actions",
+    "type": "github",
+    "buildName": "SauceDemo Selenium E2E",
+    "reportUrl": "https://github.com/qualitymasterengineer/selenium-test",
+    "buildUrl": "https://github.com/qualitymasterengineer/selenium-test/actions"
+  },
+  {
+    "name": "Selenium Framework",
+    "type": "selenium-custom",
+    "buildName": "Selenium 4.x",
+    "reportUrl": "https://www.selenium.dev"
+  }
+]

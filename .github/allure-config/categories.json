@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Known failures",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*Known failure.*"
+  },
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Passed",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "Skipped",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "Unknown",
+    "matchedStatuses": ["unknown"]
+  }
+]
